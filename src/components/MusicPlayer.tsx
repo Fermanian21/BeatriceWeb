@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, SkipForward, SkipBack, FileText, X, Minus, Disc3 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { FileText, Disc3 } from 'lucide-react';
 
 const PLAYLIST = [
   {
@@ -219,14 +219,14 @@ const PLAYLIST = [
       { time: 208, text: "Dying by the hand of a foreign man" },
       { time: 212, text: "Happily" },
       { time: 216, text: "Calling out my name in the summer rain" },
-      { time: 220, text: "Ciao, amore" },
+      { time: 219, text: "Ciao, amore" },
       { time: 224, text: "Salvatore can wait, now it's time to eat" },
       { time: 228, text: "Soft ice cream" },
       { time: 232, text: "Ah-ah-ah-ah, ah-ah-ah-ah-ah" },
       { time: 236, text: "Cacciatore" },
       { time: 240, text: "Ah-ah-ah-ah, ah-ah-ah-ah-ah" },
       { time: 244, text: "Limousines" },
-      { time: 248, text: "Ah-ah-ah-ah, ah-ah-ah-ah" },
+      { time: 248, text: "Ah-ah-ah-ah, ah-ah-ah" },
       { time: 252, text: "Ciao amore" },
       { time: 256, text: "Ah-ah-ah-ah, ah-ah-ah-ah-ah" },
       { time: 262, text: "Soft ice cream" }
@@ -234,11 +234,14 @@ const PLAYLIST = [
   }
 ];
 
+// Ícones Customizados "Pontudos" (estilo Burton)
+const IconPlay = () => <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>;
+const IconPause = () => <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>;
+const IconSkipForward = () => <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 3l10 9-10 9V3z M18 3h2v18h-2V3z"/></svg>;
+const IconSkipBack = () => <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18 21L8 12l10-9v18z M6 21H4V3h2v18z"/></svg>;
+
 export default function MusicPlayer() {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [showLyrics, setShowLyrics] = useState(false);
-  
+  const [showLyrics, setShowLyrics] = useState(true);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -256,11 +259,7 @@ export default function MusicPlayer() {
 
   const togglePlay = () => {
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
+      isPlaying ? audioRef.current.pause() : audioRef.current.play();
       setIsPlaying(!isPlaying);
     }
   };
@@ -270,13 +269,9 @@ export default function MusicPlayer() {
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
-      const current = audioRef.current.currentTime;
-      const duration = audioRef.current.duration;
-      
-      if (duration && !isNaN(duration)) {
-        setProgress((current / duration) * 100);
-      }
-      setCurrentTime(current);
+      const { currentTime, duration } = audioRef.current;
+      if (duration && !isNaN(duration)) setProgress((currentTime / duration) * 100);
+      setCurrentTime(currentTime);
     }
   };
 
@@ -284,160 +279,70 @@ export default function MusicPlayer() {
     if (audioRef.current && progressBarRef.current) {
       const rect = progressBarRef.current.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
-      
       const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-      const duration = audioRef.current.duration;
-      
-      if (duration && !isNaN(duration)) {
-        const newTime = percentage * duration;
-        audioRef.current.currentTime = newTime;
-        setProgress(percentage * 100);
-        setCurrentTime(newTime); 
-      }
+      audioRef.current.currentTime = percentage * audioRef.current.duration;
     }
   };
 
-  const activeLyricIndex = currentTrack.lyrics.reduce((acc, lyric, index) => {
-    return currentTime >= lyric.time ? index : acc;
-  }, 0);
+  const activeLyricIndex = currentTrack.lyrics.reduce((acc, lyric, index) => 
+    currentTime >= lyric.time ? index : acc, 0);
 
   return (
     <>
-      <audio 
-        ref={audioRef} 
-        src={currentTrack.file}
-        preload="metadata" 
-        onTimeUpdate={handleTimeUpdate} 
-        onLoadedMetadata={handleTimeUpdate} 
-        onSeeked={handleTimeUpdate} 
-        onEnded={nextTrack} 
-      />
+      <audio ref={audioRef} src={currentTrack.file} onTimeUpdate={handleTimeUpdate} onEnded={nextTrack} />
 
-      {/* BOTÃO FLUTUANTE QUANDO FECHADO */}
-      {!isOpen ? (
-        <motion.button
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          whileHover={{ scale: 1.05 }}
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 bg-[#0a0a0c]/95 border border-gray-700 text-gray-300 px-4 py-2.5 rounded-none shadow-[0_10px_30px_rgba(0,0,0,0.8)] font-mono text-xs backdrop-blur-md cursor-pointer hover:border-red-900 transition-colors"
-        >
-          <Disc3 className="w-4 h-4 text-red-900 animate-spin" />
-          <span>AUDIO SYS [OFFLINE]</span>
-        </motion.button>
-      ) : (
-        /* JANELA PRINCIPAL DO PLAYER */
-        <motion.div
-          drag
-          dragMomentum={false}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-6 right-6 z-[100] w-80 md:w-96 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-gray-700 bg-[#0a0a0c]/95 backdrop-blur-md font-mono"
-          style={{ touchAction: "none" }}
-        >
-          <div className="flex items-center justify-between bg-neutral-900 border-b border-gray-700 px-3 py-2 cursor-grab active:cursor-grabbing">
-            <div className="flex items-center gap-2 text-gray-400">
-              <Disc3 className="w-4 h-4 text-red-900" />
-              <span className="text-[10px] tracking-widest uppercase">SYS.AUDIO_PLAYER</span>
+      <div className="w-full border border-gray-800 bg-[#0a0a0c] font-serif shadow-xl my-4 p-4 flex flex-col gap-3.5">
+        <div>
+          <div className="flex items-center gap-2 text-gray-500 pb-2">
+            <Disc3 className="w-4 h-4" />
+            <span className="text-sm uppercase tracking-[0.15em] font-serif">RADIO PLAYER</span>
+          </div>
+          <div className="border-b border-gray-800 w-full" />
+        </div>
+
+        <div className="flex items-center gap-3.5">
+          <div className="relative w-20 h-20 flex-shrink-0">
+            <div className="absolute top-0 h-full aspect-square transition-all duration-700 ease-out"
+                 style={{ left: isPlaying ? '25px' : '0px', opacity: isPlaying ? 1 : 0 }}>
+              <img src="https://pngimg.com/d/vinyl_PNG95.png" alt="Vinyl" className="w-full h-full object-contain filter grayscale brightness-75"
+                   style={{ animation: isPlaying ? 'spin 3s linear infinite' : 'none' }} />
             </div>
-            <div className="flex gap-3 text-gray-500">
-              <button onClick={() => setIsMinimized(!isMinimized)} className="hover:text-white"><Minus className="w-4 h-4" /></button>
-              <button onClick={() => setIsOpen(false)} className="hover:text-red-500" title="Fechar Player"><X className="w-4 h-4" /></button>
-            </div>
+            <img src={currentTrack.cover} alt="Cover" className="absolute inset-0 w-full h-full object-cover border border-gray-800 z-10 shadow-inner bg-black" />
           </div>
 
-          {!isMinimized && (
-            <div className="p-4 flex flex-col gap-4">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-gray-200 font-bold truncate text-sm font-serif">{currentTrack.title}</h3>
+            <p className="text-gray-500 text-xs truncate uppercase tracking-widest mt-1 font-serif">{currentTrack.artist}</p>
+            
+            <div className="flex items-center gap-4 mt-2.5">
+              <button onClick={prevTrack} className="text-gray-500 hover:text-gray-200 transition-colors cursor-pointer"><IconSkipBack /></button>
+              <button onClick={togglePlay} className="text-gray-500 hover:text-gray-200 transition-colors cursor-pointer">
+                {isPlaying ? <IconPause /> : <IconPlay />}
+              </button>
+              <button onClick={nextTrack} className="text-gray-500 hover:text-gray-200 transition-colors cursor-pointer"><IconSkipForward /></button>
               
-              <div className="flex items-center gap-4">
-                <div className="relative w-20 h-20 flex-shrink-0 group">
-                  <div 
-                    className="absolute top-0 h-full aspect-square transition-all duration-700 ease-out"
-                    style={{ left: isPlaying ? '25px' : '0px', opacity: isPlaying ? 1 : 0 }}
-                  >
-                    <img 
-                      src="https://pngimg.com/d/vinyl_PNG95.png" 
-                      alt="Vinyl" 
-                      className="w-full h-full object-contain"
-                      style={{ animation: isPlaying ? 'spin 3s linear infinite' : 'none' }}
-                    />
-                  </div>
-                  <img 
-                    src={currentTrack.cover} 
-                    alt="Cover" 
-                    className="absolute inset-0 w-full h-full object-cover border border-gray-700 z-10 shadow-lg bg-black"
-                  />
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-gray-200 font-bold truncate text-sm">{currentTrack.title}</h3>
-                  <p className="text-gray-500 text-xs truncate uppercase tracking-wider mt-1">{currentTrack.artist}</p>
-                  
-                  <div className="flex items-center gap-4 mt-3">
-                    <button onClick={prevTrack} className="text-gray-500 hover:text-white transition-colors">
-                      <SkipBack className="w-4 h-4 fill-current" />
-                    </button>
-                    <button 
-                      onClick={togglePlay} 
-                      className="w-8 h-8 flex items-center justify-center bg-gray-800 text-white rounded-full hover:bg-red-900 transition-colors shadow-lg"
-                    >
-                      {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
-                    </button>
-                    <button onClick={nextTrack} className="text-gray-500 hover:text-white transition-colors">
-                      <SkipForward className="w-4 h-4 fill-current" />
-                    </button>
-                    
-                    <button 
-                      onClick={() => setShowLyrics(!showLyrics)} 
-                      className={`ml-auto text-xs flex items-center gap-1 transition-colors ${showLyrics ? 'text-red-500' : 'text-gray-500 hover:text-white'}`}
-                    >
-                      <FileText className="w-3 h-3" />
-                      LYRICS
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div 
-                ref={progressBarRef}
-                onClick={handleSeek}
-                className="w-full h-2 bg-gray-900 rounded-full overflow-hidden cursor-pointer group flex items-center"
-              >
-                <div className="h-1 bg-gray-800 w-full group-hover:h-2 transition-all duration-200 relative pointer-events-none">
-                  <div 
-                    className="absolute top-0 left-0 h-full bg-red-900 transition-all duration-75 ease-linear" 
-                    style={{ width: `${progress}%` }} 
-                  />
-                </div>
-              </div>
-
-              {showLyrics && (
-                <div className="mt-2 border-t border-gray-800 flex flex-col items-center justify-center h-20 relative overflow-hidden">
-                  <motion.div
-                    key={activeLyricIndex} 
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-center w-full absolute"
-                  >
-                    <p className="text-sm text-gray-200 font-serif italic mb-1 transition-all">
-                      {currentTrack.lyrics[activeLyricIndex]?.text || "..."}
-                    </p>
-                    <p className="text-[10px] text-gray-600 font-serif italic truncate px-4">
-                      {currentTrack.lyrics[activeLyricIndex + 1]?.text || ""}
-                    </p>
-                  </motion.div>
-                </div>
-              )}
-
+              <button onClick={() => setShowLyrics(!showLyrics)} className={`ml-auto text-xs flex items-center gap-1 transition-colors font-serif cursor-pointer ${showLyrics ? 'text-gray-200' : 'text-gray-500 hover:text-gray-300'}`}>
+                <FileText className="w-4 h-4" /> LYRICS
+              </button>
             </div>
-          )}
-        </motion.div>
-      )}
+          </div>
+        </div>
+
+        <div ref={progressBarRef} onClick={handleSeek} className="w-full h-1.5 bg-black/40 border border-gray-800 cursor-pointer flex items-center">
+          <div className="h-1 bg-gray-500 transition-all duration-75" style={{ width: `${progress}%` }} />
+        </div>
+
+        {showLyrics && (
+          <div className="border border-gray-800 flex flex-col items-center justify-center h-24 relative overflow-hidden bg-black/40 px-3">
+            <motion.div key={activeLyricIndex} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-center w-full absolute px-2">
+              <p className="text-sm text-gray-200 font-serif italic mb-1 leading-relaxed">{currentTrack.lyrics[activeLyricIndex]?.text || "..."}</p>
+              <p className="text-xs text-gray-500 font-serif italic truncate">{currentTrack.lyrics[activeLyricIndex + 1]?.text || ""}</p>
+            </motion.div>
+          </div>
+        )}
+      </div>
       
-      <style>{`
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-      `}</style>
+      <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
     </>
   );
 }

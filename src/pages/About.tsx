@@ -6,19 +6,19 @@ import TextLoop from '../components/TextLoop';
 
 export default function About() {
   return (
-    <div className="min-h-screen w-full bg-[#050508] text-gray-300 font-serif p-4 md:p-8 flex items-center justify-center">
+    <div className="min-h-screen w-full bg-[#050508] text-gray-300 font-serif p-4 md:p-8 flex justify-center">
       
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-        className="max-w-6xl w-full border-4 border-double border-gray-700 bg-black/40 p-4 md:p-8 grid grid-cols-1 md:grid-cols-12 gap-6 relative shadow-2xl"
+        className="max-w-6xl w-full mx-auto border-4 border-double border-gray-700 bg-black/40 p-6 md:p-10 grid grid-cols-1 md:grid-cols-12 gap-8 relative shadow-2xl"
       >
         
-        <div className="md:col-span-4 flex flex-col gap-4">
+        <div className="md:col-span-5 flex flex-col gap-6">
           
-          <div className="border border-gray-800 bg-[#0a0a0c] p-3 shadow-inner">
-            <div className="w-full aspect-[3/4] border-2 border-gray-700 bg-gray-900 relative overflow-hidden group flex items-center justify-center cursor-crosshair">
+          <div className="border border-gray-800 bg-[#0a0a0c] p-4 shadow-inner">
+            <div className="w-full aspect-[2/3] border-2 border-gray-700 bg-gray-900 relative overflow-hidden group flex items-center justify-center cursor-crosshair">
               
               <div className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700">
                 <RippleDistortion
@@ -35,38 +35,38 @@ export default function About() {
 
             </div>
             
-            <div className="mt-4 text-center">
-              <h1 className="font-burtons text-4xl text-gray-200 tracking-wider mb-1">
+            <div className="mt-6 text-center">
+              <h1 className="font-burtons text-5xl text-gray-200 tracking-wider mb-2">
                 Beatrice
               </h1>
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2 border-b border-gray-800 pb-2 flex justify-center gap-2">
+              <p className="text-sm uppercase tracking-[0.2em] text-gray-400 mb-3 border-b border-gray-800 pb-3 flex justify-center gap-2">
                 <span className="bg-gray-800 text-gray-800 select-none px-2 rounded-sm" aria-hidden="true" title="[REDACTED]">
                   De Prospero
                 </span> 
                 Trano
               </p>
-              <p className="text-sm text-gray-400">Age: 28 | Occupation: Artist</p>
+              <p className="text-base text-gray-400">Age: 28 | Occupation: Artist</p>
             </div>
           </div>
 
-          <div className="border border-gray-800 p-4 bg-[#0a0a0c] text-center">
-            <p className="text-gray-500 italic text-sm">
+          <div className="border border-gray-800 p-5 bg-[#0a0a0c] text-center mt-auto">
+            <p className="text-base text-gray-400 italic">
               {`"One person's craziness is another person's reality."`}
             </p>
           </div>
 
         </div>
 
-        <div className="md:col-span-8 flex flex-col gap-4">
+        <div className="md:col-span-7 flex flex-col gap-6">
           
-          <div className="border border-gray-800 bg-[#0a0a0c] h-16 md:h-20 overflow-hidden flex items-center justify-center relative cursor-default shadow-inner">
+          <div className="border border-gray-800 bg-[#0a0a0c] h-20 md:h-24 overflow-hidden flex items-center justify-center relative cursor-default shadow-inner">
             <TextLoop
               text="FILMMAKER ✦ SCREENWRITER ✦ ANIMATOR ✦ PRODUCER"
               shape="line"
               speed={60}
               separator="✦"
               curviness={0}
-              fontSize={32}
+              fontSize={36}
               fontWeight={700}
               letterSpacing={4}
               uppercase={true}
@@ -78,12 +78,12 @@ export default function About() {
             />
           </div>
 
-          <div className="border border-gray-800 p-5 bg-[#0a0a0c]">
-            <h2 className="font-burtons text-2xl text-gray-300 mb-4 border-b border-gray-800 pb-2">
+          <div className="border border-gray-800 p-6 bg-[#0a0a0c]">
+            <h2 className="font-burtons text-3xl text-gray-300 mb-5 border-b border-gray-800 pb-3">
               Characteristics
             </h2>
             
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-3 text-center">
+            <div className="grid grid-cols-4 md:grid-cols-8 gap-4 text-center">
               {[
                 { label: 'STR', val: 15 },
                 { label: 'DEX', val: 45 },
@@ -94,35 +94,35 @@ export default function About() {
                 { label: 'SIZ', val: 40 },
                 { label: 'INT', val: 80 }
               ].map((attr) => (
-                <div key={attr.label} className="flex flex-col border border-gray-800 p-2 bg-black/40">
-                  <span className="text-[10px] text-gray-500 tracking-wider mb-1">{attr.label}</span>
-                  <span className="text-xl text-gray-300 font-bold">{attr.val}</span>
+                <div key={attr.label} className="flex flex-col border border-gray-800 p-3 bg-black/40">
+                  <span className="text-xs text-gray-400 tracking-wider mb-2">{attr.label}</span>
+                  <span className="text-2xl text-gray-300 font-bold">{attr.val}</span>
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <div className="border border-red-900/40 bg-red-950/20 p-3 text-center flex flex-col justify-center">
-                <span className="text-[10px] text-red-500/70 uppercase tracking-widest mb-1">Sanity</span>
-                <span className="text-3xl text-red-400 font-serif font-bold">90</span>
+            <div className="grid grid-cols-3 gap-5 mt-6">
+              <div className="border border-gray-800 bg-black/40 p-4 text-center flex flex-col justify-center">
+                <span className="text-sm text-gray-400 font-bold tracking-wider mb-2">  SANITY</span>
+                <span className="text-4xl text-gray-300 font-serif font-bold">90</span>
               </div>
-              <div className="border border-gray-800 bg-black/40 p-3 text-center flex flex-col justify-center">
-                <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Hit Points</span>
-                <span className="text-3xl text-gray-300 font-serif">9</span>
+              <div className="border border-gray-800 bg-black/40 p-4 text-center flex flex-col justify-center">
+                <span className="text-sm text-gray-400 font-bold tracking-wider mb-2">HIT POINTS</span>
+                <span className="text-4xl text-gray-300 font-serif font-bold">9</span>
               </div>
-              <div className="border border-gray-800 bg-black/40 p-3 text-center flex flex-col justify-center">
-                <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Magic Points</span>
-                <span className="text-3xl text-gray-300 font-serif">18</span>
+              <div className="border border-gray-800 bg-black/40 p-4 text-center flex flex-col justify-center">
+                <span className="text-sm text-gray-400 font-bold tracking-wider mb-2">MAGIC POINTS</span>
+                <span className="text-4xl text-gray-300 font-serif font-bold">18</span>
               </div>
             </div>
           </div>
 
-          <div className="border border-gray-800 p-5 bg-[#0a0a0c] flex-grow">
-            <h2 className="font-burtons text-2xl text-gray-300 mb-4 border-b border-gray-800 pb-2">
+          <div className="border border-gray-800 p-6 bg-[#0a0a0c] flex-grow">
+            <h2 className="font-burtons text-3xl text-gray-300 mb-6 border-b border-gray-800 pb-3">
               Investigator Skills
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
               {[
                 { name: 'Art / Craft', val: 99 },
                 { name: 'Spot Hidden', val: 71 },
@@ -133,9 +133,9 @@ export default function About() {
                 { name: 'Psychology', val: 70 },
                 { name: 'Listen', val: 60 },
               ].map((skill) => (
-                <div key={skill.name} className="flex justify-between items-end border-b border-gray-800/50 pb-1 group hover:border-gray-500 transition-colors">
-                  <span className="text-sm text-gray-400 group-hover:text-gray-200">{skill.name}</span>
-                  <span className="text-lg font-bold text-gray-300">{skill.val}</span>
+                <div key={skill.name} className="flex justify-between items-end border-b border-gray-800/50 pb-2 group hover:border-gray-500 transition-colors">
+                  <span className="text-base text-gray-400 group-hover:text-gray-200">{skill.name}</span>
+                  <span className="text-xl font-bold text-gray-300">{skill.val}</span>
                 </div>
               ))}
             </div>

@@ -24,23 +24,23 @@ export default function App() {
 
   const menuItems = [
     { id: 'dossier', label: 'Dossier / Home' },
-    { id: 'cinema', label: 'Cinema / Media' },
-    { id: 'gallery', label: 'Dollhouse / Arts' },
-    { id: 'facts', label: 'Fragments / Facts' },
-    { id: 'classified', label: '[Classified] Bio' },
+    { id: 'cinema', label: 'Film Projects' },
+    { id: 'gallery', label: 'Art Gallery' },
+    { id: 'facts', label: 'Facts' },
+    { id: 'classified', label: 'Biography' },
   ];
 
   return (
     <div className="min-h-screen bg-[#050508] text-gray-300 font-serif flex flex-col md:flex-row selection:bg-red-900 selection:text-white">
       
-      <nav className="w-full md:w-64 border-b-4 md:border-b-0 md:border-r-4 border-double border-gray-700 bg-black/80 flex flex-col p-6 z-10 shadow-2xl relative">
-        <div className="mb-8 text-center md:text-left">
+      <nav className="w-full md:w-96 border-b-4 md:border-b-0 md:border-r-4 border-double border-gray-700 bg-black/80 flex flex-col p-6 z-10 shadow-2xl relative md:h-screen md:overflow-y-auto">
+        <div className="mb-6 text-center md:text-left flex-shrink-0">
           <h1 className="font-burtons text-3xl text-gray-200 tracking-widest border-b border-gray-800 pb-4">
-            B. Trano
+            Beatrice Trano
           </h1>
         </div>
 
-        <ul className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-visible pb-4 md:pb-0">
+        <ul className="flex flex-row md:flex-col gap-3 overflow-x-auto md:overflow-visible pb-4 md:pb-0 flex-shrink-0">
           {menuItems.map((item) => (
             <li key={item.id} className="min-w-max">
               <button
@@ -57,7 +57,11 @@ export default function App() {
           ))}
         </ul>
 
-        <div className="hidden md:block mt-auto text-xs text-gray-700 uppercase tracking-widest text-center border-t border-gray-800 pt-4">
+        <div className="flex-shrink-0">
+          <MusicPlayer />
+        </div>
+
+        <div className="mt-auto text-xs text-gray-700 uppercase tracking-widest text-center border-t border-gray-800 pt-4 flex-shrink-0">
           Sys. Version 19.20<br />
           Restricted Access
         </div>
@@ -77,8 +81,6 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
       </main>
-
-      <MusicPlayer />
 
     </div>
   );

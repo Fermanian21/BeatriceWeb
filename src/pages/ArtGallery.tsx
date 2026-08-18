@@ -23,7 +23,10 @@ function ParallaxCanvas({ title, subtitle, artworks, onSelectArtwork }: any) {
       
       <div className="absolute top-16 left-0 w-full text-center z-[60] pointer-events-none">
         <h2 className="font-burtons text-5xl md:text-7xl text-gray-200 tracking-wider drop-shadow-2xl">{title}</h2>
-        <p className="text-red-900 uppercase tracking-[0.4em] text-xs mt-3 font-mono drop-shadow-md">{subtitle}</p>
+        {/* AUMENTADO: Troquei para text-lg (mobile) e text-xl (desktop) */}
+        <p className="text-lg md:text-xl text-gray-400 uppercase tracking-[0.4em] mt-3 font-serif drop-shadow-lg">
+          {subtitle}
+        </p>
       </div>
 
       <div 
